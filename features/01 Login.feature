@@ -5,7 +5,7 @@ Feature: Login Page
   Scenario: Registration of a New User
     Given a new user
     When the user registers an account
-    Then a success alert must be shown
+    Then the login success alert must be shown
     And the user must be able to use the account to login
 
   @functional_error
