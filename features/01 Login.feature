@@ -1,5 +1,5 @@
 # Created by jerry at 26-10-2021
-Feature: Login
+Feature: Login Page
   # This contains scenarios related to login and registration
 
   Scenario: Registration of a New User
