@@ -1,14 +1,15 @@
 from selenium import webdriver
 
+
 def before_all(context):
     # initialize browser
-    context.driver = webdriver.Chrome("./webdriver/chromedriver")
+    context.driver = webdriver.Chrome("./webdriver/chromedriver.exe")
     context.driver.maximize_window()
     context.driver.get("https://demoqa.com/login")
 
 
 def before_scenario(context, scenario):
-    pass
+    context.data = {}
 
 
 def after_scenario(context, scenario):

@@ -2,10 +2,11 @@
 Feature: Login Page
   # This contains scenarios related to login and registration
 
+  @test
   Scenario: Registration of a New User
     Given a new user
     When the user registers an account
-    Then the login success alert must be shown
+    Then the successful registration alert must be shown
     And the user must be able to use the account to login
 
   @functional_error
