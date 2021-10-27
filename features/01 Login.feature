@@ -2,7 +2,7 @@
 Feature: Login Page
   # This contains scenarios related to login and registration
 
-  @test
+  @with_manual_intervention
   Scenario: Registration of a New User
     Given a new user
     When the user registers an account
@@ -13,17 +13,24 @@ Feature: Login Page
   Scenario Outline: Missing Field during Registration
     Given a new user
     When the user registers an account using the following details
-      | first_name   | last_name   | user_name   |
-      | <first_name> | <last_name> | <user_name> |
-    Then a warning icon must be shown for the missing field
+      | first_name   | last_name   | user_name   | password   |
+      | <first_name> | <last_name> | <user_name> | <password> |
+    Then a warning icon must be shown for <null_field> field
 
     Examples:
-    | first_name | last_name | user_name  |
-    | null       | Smith     | null_smith |
-    | Ed         | null      | ed_null    |
-    | Ed         | Smith     | null       |
+    | first_name | last_name | user_name  | password  | null_field |
+    |            | Smith     | null_smith | Passw0rd! | first_name |
+    | Ed         |           | ed_null    | Passw0rd! | last_name  |
+    | Ed         | Smith     |            | Passw0rd! | user_name  |
+    | Ed         | Smith     | ed.smith   |           | password   |
 
   @functional_error
+  Scenario: Registration without Captcha
+    Given a new user
+    When the user registers an account without captcha
+    Then an error message related to captcha must be shown
+
+  @functional_error @with_manual_intervention
   Scenario Outline: Invalid Password during Registration
     Given a new user
     When the user registers an account using password - <password>

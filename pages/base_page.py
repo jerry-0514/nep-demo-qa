@@ -20,7 +20,7 @@ class BasePage:
 
     def __init__(self, driver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 5)
+        self.wait = WebDriverWait(driver, 10)
 
     def get_element(self, locator, locator_type='id'):
         self.wait.until(EC.visibility_of_element_located((self.type_map[locator_type], locator)))
@@ -32,10 +32,14 @@ class BasePage:
 
     def click_element(self, locator, locator_type='id'):
         logging.info("Clicking element - {}".format(locator))
-        self.get_element(locator, locator_type).click()
+        self.wait.until(EC.element_to_be_clickable((self.type_map[locator_type], locator)))
+        self.driver.execute_script("arguments[0].click();", self.get_element(locator, locator_type))
 
     def get_text(self, locator, locator_type='id'):
         return self.get_element(locator, locator_type).text
+
+    def get_attribute(self, attribute, locator, locator_type='id'):
+        return self.get_element(locator, locator_type).get_attribute(attribute)
 
     def set_field(self, value, locator, locator_type='id'):
         element = self.get_element(locator, locator_type)
@@ -43,9 +47,17 @@ class BasePage:
         element.clear()
         element.send_keys(value)
 
-    def check_page_name(self, page_name):
+    def go_to_nav_bar(self, locator, locator_type='id'):
+        self.click_element(locator, locator_type)
+        self.verify_page_is_loaded()
+
+    def verify_page_name(self, page_name):
         assert_that(self.get_text('main-header', 'class'), 'Check Page Name').is_equal_to(page_name)
         logging.info("Page name is {}".format(page_name))
 
     def wait_for_alert_message(self):
-        self.wait.until(EC.alert_is_present())
+        # self.wait.until(EC.alert_is_present())
+        pass
+
+    def verify_page_is_loaded(self):
+        self.wait.until(EC.visibility_of_element_located((self.type_map['class'], 'main-header')))
