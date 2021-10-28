@@ -14,6 +14,7 @@ def before_scenario(context, scenario):
     context.driver.maximize_window()
     context.driver.get("https://demoqa.com/login")
     context.data = {}
+    context.results = {}
 
 
 def after_scenario(context, scenario):

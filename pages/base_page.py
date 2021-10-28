@@ -1,9 +1,11 @@
 from assertpy import assert_that
 import logging
+import time
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import Select
 
 
 class BasePage:
@@ -28,7 +30,23 @@ class BasePage:
 
     def find_element(self, locator, locator_type='id'):
         by_type = self.type_map.get(locator_type)
+        self.highlight_element(self.driver.find_element(by_type, locator))
         return self.driver.find_element(by_type, locator)
+
+    def get_elements(self, locator, locator_type='id'):
+        self.wait.until(EC.visibility_of_element_located((self.type_map[locator_type], locator)))
+        return self.find_elements(locator, locator_type)
+
+    def find_elements(self, locator, locator_type='id'):
+        by_type = self.type_map.get(locator_type)
+        return self.driver.find_elements(by_type, locator)
+
+    def highlight_element(self, element):
+        original_style = element.get_attribute('style')
+        self.driver.execute_script("arguments[0].setAttribute('style', arguments[1]);", element,
+                                   "background: yellow; border: 2px solid red;")
+        time.sleep(.2)
+        self.driver.execute_script("arguments[0].setAttribute('style', arguments[1]);", element, original_style)
 
     def click_element(self, locator, locator_type='id'):
         logging.info("Clicking element - {}".format(locator))
@@ -36,7 +54,12 @@ class BasePage:
         self.driver.execute_script("arguments[0].click();", self.get_element(locator, locator_type))
 
     def get_text(self, locator, locator_type='id'):
-        return self.get_element(locator, locator_type).text
+        text_value = self.get_element(locator, locator_type).text
+        logging.info('Getting text for {}: {}'.format(locator, text_value))
+        return text_value
+
+    def select_by_value(self, value, locator, locator_type='id'):
+        Select(self.get_element(locator, locator_type)).select_by_value(value)
 
     def get_attribute(self, attribute, locator, locator_type='id'):
         return self.get_element(locator, locator_type).get_attribute(attribute)

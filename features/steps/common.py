@@ -1,9 +1,13 @@
 import pyautogui
 import time
+import json
 
 from behave import given, then
 from faker import Faker
 from pages.base_page import BasePage
+from pages.navbar import NavBar
+
+from features.steps.login import login_user
 
 
 @given("a new user")
@@ -20,6 +24,24 @@ def use_existing_user(context):
     context.data['last_name'] = 'Baker'
     context.data['user_name'] = 'timothy.baker'
     context.data['password'] = "Passw0rd!"
+
+
+@given("a logged in user")
+def logged_in_user(context):
+    use_existing_user(context)
+    login_user(context, username=context.data['user_name'], password=context.data['password'])
+
+
+@given("the user is in {page_name} page")
+def go_to_page(context, page_name):
+    NavBar(context.driver).go_to_page(page_name)
+
+
+@given("the user has the details of all the books from a data source")
+def parse_book_details_from_data_source(context):
+    f = open('data/books.json', encoding="utf-8")
+    context.data['book_details'] = json.load(f)
+    f.close()
 
 
 @then("the user must be redirected to {page_name} page")

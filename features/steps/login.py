@@ -3,9 +3,11 @@ from behave import when, then, given
 from pages.base_page import BasePage
 from pages.login_page import LoginPage
 from pages.register_page import RegisterPage
+from pages.navbar import NavBar
 
 
 def login_user(context, username, password, is_successful=True):
+    NavBar(context.driver).go_to_page('Login')
     LoginPage(context.driver).login_user(username, password, is_successful)
 
 

@@ -19,8 +19,6 @@ class LoginPage(BasePage):
         self.driver = driver
 
     def login_user(self, username, password, is_successful=True):
-        self.go_to_nav_bar(*self.nav_login_locator)
-
         self.set_field(username, *self.txt_user_name_locator)
         self.set_field(password, *self.txt_password_locator)
 
