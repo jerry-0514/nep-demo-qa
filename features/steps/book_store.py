@@ -1,8 +1,13 @@
 import logging
-from behave import when, then
+from behave import given, when, then
 from faker import Faker
 from assertpy import assert_that
 from pages.book_store_page import BookStorePage
+
+
+@given("the user selects a random book")
+def given_select_random_book(context):
+    context.data['recently_added_book'] = BookStorePage(context.driver).select_random_book()
 
 
 @when("the user checks the details of all the books")

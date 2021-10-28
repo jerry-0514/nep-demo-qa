@@ -2,6 +2,7 @@ from pages.base_page import BasePage
 from assertpy import assert_that
 
 import logging
+import random
 
 
 class BookStorePage(BasePage):
@@ -21,6 +22,7 @@ class BookStorePage(BasePage):
     lbl_detail_value_locator = ("//div[@class='mt-2 row'][{}]/child::div[2]", "xpath")
 
     btn_back_locator = ("//*[text()='Back To Book Store']", "xpath")
+    btn_add_to_collection_locator = ("//*[text()='Add To Your Collection']", "xpath")
     btn_search_locator = ("basic-addon2", "id")
 
     drp_rows_locator = ("//*[@aria-label='rows per page']", "xpath")
@@ -71,3 +73,13 @@ class BookStorePage(BasePage):
     def verify_row_count(self, row_cnt):
         actual_row_cnt = len(self.get_elements(*self.comp_row_locator))
         assert_that(actual_row_cnt).is_equal_to(int(row_cnt))
+
+    def select_random_book(self):
+        title = random.choice([title_e.text for title_e in self.get_elements(*self.link_title_locator)])
+        logging.info('Selecting this book randomly: {}'.format(title))
+        self.click_element('//*[text()="{}"]'.format(title), 'xpath')
+        self.get_element(*self.comp_profile_wrapper_locator)
+        return title
+
+    def add_book_to_collection(self):
+        self.click_element(*self.btn_add_to_collection_locator)

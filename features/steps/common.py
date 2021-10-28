@@ -50,16 +50,7 @@ def verify_redirected_page(context, page_name):
 
 
 @then("the {alert_type} alert must be shown")
-def verify_alert(context, alert_type):
-    alert_type_dict = {
-        'successful registration': 'User Register Successfully.'
-    }
-
-    # alert_e = context.driver.switch_to.alert
-    # alert_msg = alert_e.text
-    # logging.info("Alert says {}".format(alert_msg))
-    # assert_that(alert_msg).is_equal_to(alert_type_dict[alert_type])
-    # alert_e.accept()
-
+def verify_alert(context, alert_type=''):
+    # alert handling is not working. so the program just simulates the ENTER keyboard instead.
     time.sleep(3)
     pyautogui.press('enter')
